@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'models/movies.dart';
 
 class UpcomingMoviesPage extends StatefulWidget {
   UpcomingMoviesPage({Key key, this.title}) : super(key: key);
@@ -10,22 +11,31 @@ class UpcomingMoviesPage extends StatefulWidget {
 }
 
 class _UpcomingMoviesPageState extends State<UpcomingMoviesPage> {
-  final _upcomingMovies = <String>[];
   final _biggerFont = TextStyle(fontSize: 18.0);
+  Future<List<Movie>> futureMovies;
+
+  @override
+  void initState() {
+    super.initState();
+    futureMovies = fetchMovies();
+  }
 
   Widget _buildUpcomingMoviesListView() {
-    return ListView.builder(
-      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      itemBuilder: (context, i) {
-        _upcomingMovies
-            .add('Super lenghty text just to see if it will break the line $i');
-
-        return _buildMovieRow(_upcomingMovies[i]);
+    return FutureBuilder<List<Movie>>(
+      future: futureMovies,
+      builder: (ctx, snapshot) {
+        return ListView.builder(
+          padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+          itemCount: snapshot.data.length,
+          itemBuilder: (context, i) {
+            return _buildMovieRow(snapshot.data[i]);
+          },
+        );
       },
     );
   }
 
-  Widget _buildMovieRow(String item) {
+  Widget _buildMovieRow(Movie item) {
     return Card(
       margin: EdgeInsets.symmetric(vertical: 8),
       child: Container(
@@ -35,7 +45,7 @@ class _UpcomingMoviesPageState extends State<UpcomingMoviesPage> {
             SizedBox(
               width: double.infinity,
               child: Text(
-                item,
+                item.title,
                 style: _biggerFont,
               ),
             ),

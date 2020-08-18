@@ -1,13 +1,10 @@
-import 'package:cinelovers/models/genre.dart';
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'package:http/http.dart' as http;
 
 Future<List<Movie>> fetchMovies() async {
   final response = await http.get(
-    'https://jsonplaceholder.typicode.com/albums/1',
-    headers: {HttpHeaders.authorizationHeader: "Bearer TOKEN"},
+    'https://api.themoviedb.org/3/movie/upcoming?page=1&language=en-US&api_key=KEY',
   );
   final responseJson = json.decode(response.body);
 
@@ -32,7 +29,9 @@ class MoviePage {
       json['page'],
       json['total_pages'],
       json['total_results'],
-      json['results'],
+      List<Map>.from(json['results'])
+          .map((model) => Movie.fromJson(model))
+          .toList(),
     );
   }
 }
@@ -42,8 +41,8 @@ class Movie {
   final String title;
   final String overview;
   final String posterPath;
-  final List<Genre> genres;
-  final DateTime releaseDate;
+  final List<int> genres;
+  final String releaseDate;
 
   Movie(
     this.id,
@@ -60,7 +59,9 @@ class Movie {
       json['title'],
       json['overview'],
       json['poster_path'],
-      json['genre_ids'],
+      List<dynamic>.from(json['genre_ids'])
+          .map((model) => model as int)
+          .toList(),
       json['release_date'],
     );
   }

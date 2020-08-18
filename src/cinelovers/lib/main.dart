@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -11,6 +12,7 @@ class CineloversApp extends StatelessWidget {
     return MaterialApp(
       title: 'Cinelovers',
       theme: ThemeData(
+        scaffoldBackgroundColor: CupertinoColors.systemGrey6,
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
@@ -33,24 +35,44 @@ class _UpcomingMoviesPageState extends State<UpcomingMoviesPage> {
   final _biggerFont = TextStyle(fontSize: 18.0);
 
   Widget _buildUpcomingMovies() {
-    return ListView.builder(itemBuilder: (context, i) {
-      if (i.isOdd) return Divider();
+    return ListView.builder(
+      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      itemBuilder: (context, i) {
+        _upcomingMovies
+            .add('Super lenghty text just to see if it will break the line $i');
 
-      final index = i ~/ 2;
-      if (index >= _upcomingMovies.length) {
-        _upcomingMovies.add('Item $i');
-      }
-      return _buildMovieRow(_upcomingMovies[index]);
-    });
+        return _buildMovieRow(_upcomingMovies[i]);
+      },
+    );
   }
 
   Widget _buildMovieRow(String item) {
     return Card(
-      child: Column(children: <Widget>[
-        Text(item, style: _biggerFont),
-        Image.network('https://picsum.photos/200/300',
-            width: 200, height: 300, cacheWidth: 200, cacheHeight: 300)
-      ]),
+      margin: EdgeInsets.symmetric(vertical: 8),
+      child: Container(
+        margin: EdgeInsets.all(16),
+        child: Column(
+          children: <Widget>[
+            SizedBox(
+              width: double.infinity,
+              child: Text(
+                item,
+                style: _biggerFont,
+              ),
+            ),
+            SizedBox(
+              height: 8,
+            ),
+            Image.network(
+              'https://picsum.photos/200/300',
+              height: 300,
+              alignment: Alignment.center,
+              cacheWidth: 200,
+              cacheHeight: 300,
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -66,11 +88,16 @@ class _UpcomingMoviesPageState extends State<UpcomingMoviesPage> {
           TextField(
             autocorrect: false,
             decoration: InputDecoration(
-                prefixIcon: Icon(Icons.search),
-                hintText: 'Search',
-                border: UnderlineInputBorder()),
+              fillColor: Colors.white,
+              filled: true,
+              prefixIcon: Icon(Icons.search),
+              hintText: 'Search',
+              border: UnderlineInputBorder(),
+            ),
           ),
-          Expanded(child: _buildUpcomingMovies())
+          Expanded(
+            child: _buildUpcomingMovies(),
+          )
         ],
       ),
     );

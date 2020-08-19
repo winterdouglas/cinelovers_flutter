@@ -1,5 +1,6 @@
 import 'package:cinelovers/screens/movies/models/movies.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class UpcomingMoviesScreen extends StatefulWidget {
   UpcomingMoviesScreen({Key key, this.title}) : super(key: key);
@@ -17,7 +18,7 @@ class _UpcomingMoviesScreenState extends State<UpcomingMoviesScreen> {
   @override
   void initState() {
     super.initState();
-    futureMovies = fetchMovies();
+    futureMovies = fetchMovies(http.Client());
   }
 
   Widget _buildUpcomingMoviesListView() {

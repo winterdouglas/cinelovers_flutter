@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'upcoming_movies.dart';
+import 'screens/movies/components/upcoming_movies_screen.dart';
 
 class CineloversApp extends StatelessWidget {
   @override
@@ -11,7 +11,7 @@ class CineloversApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: UpcomingMoviesPage(title: 'Upcoming movies'),
+      home: UpcomingMoviesScreen(title: 'Upcoming movies'),
     );
   }
 }

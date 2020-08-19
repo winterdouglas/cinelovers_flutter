@@ -1,16 +1,16 @@
+import 'package:cinelovers/screens/movies/models/movies.dart';
 import 'package:flutter/material.dart';
-import 'models/movies.dart';
 
-class UpcomingMoviesPage extends StatefulWidget {
-  UpcomingMoviesPage({Key key, this.title}) : super(key: key);
+class UpcomingMoviesScreen extends StatefulWidget {
+  UpcomingMoviesScreen({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _UpcomingMoviesPageState createState() => _UpcomingMoviesPageState();
+  _UpcomingMoviesScreenState createState() => _UpcomingMoviesScreenState();
 }
 
-class _UpcomingMoviesPageState extends State<UpcomingMoviesPage> {
+class _UpcomingMoviesScreenState extends State<UpcomingMoviesScreen> {
   final _biggerFont = TextStyle(fontSize: 18.0);
   Future<List<Movie>> futureMovies;
 

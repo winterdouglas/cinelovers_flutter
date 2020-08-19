@@ -1,13 +1,19 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:rxdart/rxdart.dart';
 
-Future<List<Movie>> fetchMovies() async {
-  final response = await http.get(
-    'https://api.themoviedb.org/3/movie/upcoming?page=1&language=en-US&api_key=KEY',
+Future<List<Movie>> fetchMovies(http.Client client) async {
+  final response = await client.get(
+    'https://api.themoviedb.org/3/movie/upcoming?page=1&language=en-US&api_key=',
   );
-  final responseJson = json.decode(response.body);
 
+  return compute(parseMovies, response.body);
+}
+
+List<Movie> parseMovies(String responseBody) {
+  final responseJson = json.decode(responseBody);
   return MoviePage.fromJson(responseJson).results;
 }
 
@@ -17,19 +23,19 @@ class MoviePage {
   final int totalResults;
   final List<Movie> results;
 
-  MoviePage(
+  MoviePage({
     this.page,
     this.totalPages,
     this.totalResults,
     this.results,
-  );
+  });
 
   factory MoviePage.fromJson(Map<String, dynamic> json) {
     return MoviePage(
-      json['page'],
-      json['total_pages'],
-      json['total_results'],
-      List<Map>.from(json['results'])
+      page: json['page'] as int,
+      totalPages: json['total_pages'] as int,
+      totalResults: json['total_results'] as int,
+      results: List<Map>.from(json['results'])
           .map((model) => Movie.fromJson(model))
           .toList(),
     );

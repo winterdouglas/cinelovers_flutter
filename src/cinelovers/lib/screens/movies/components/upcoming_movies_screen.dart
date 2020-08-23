@@ -1,4 +1,6 @@
-import 'package:cinelovers/screens/movies/models/movies.dart';
+import 'package:cinelovers/core/movie.dart';
+import 'package:cinelovers/core/movie_page.dart';
+import 'package:cinelovers/core/movie_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -13,23 +15,25 @@ class UpcomingMoviesScreen extends StatefulWidget {
 
 class _UpcomingMoviesScreenState extends State<UpcomingMoviesScreen> {
   final _biggerFont = TextStyle(fontSize: 18.0);
-  Future<List<Movie>> futureMovies;
+  MovieProvider _movieProvider;
+  Future<MoviePage> futureMoviePage;
 
   @override
   void initState() {
     super.initState();
-    futureMovies = fetchMovies(http.Client());
+    _movieProvider = MovieProvider(http.Client());
+    futureMoviePage = _movieProvider.fetchUpcomingMovies(1);
   }
 
   Widget _buildUpcomingMoviesListView() {
-    return FutureBuilder<List<Movie>>(
-      future: futureMovies,
+    return FutureBuilder<MoviePage>(
+      future: futureMoviePage,
       builder: (ctx, snapshot) {
         return ListView.builder(
           padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-          itemCount: snapshot.data.length,
+          itemCount: snapshot.hasData ? snapshot.data.results.length : 0,
           itemBuilder: (context, i) {
-            return _buildMovieRow(snapshot.data[i]);
+            return _buildMovieRow(snapshot.data.results[i]);
           },
         );
       },
